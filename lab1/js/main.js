@@ -12,21 +12,43 @@ var Stamen_TonerLite = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/ton
       	ext: 'png'
       }).addTo(map);
 
+// first create order for the slides
+var currentSlide = 0;
+
 // remove "previous" button on slide 0, remove "next" button on slide 4
-      var buttonChange = () => {
-        if (currentSlide == 0) {
-          $("#previous").hide()
-        } else {
-          $("#previous").show()
-        }
-        if (currentSlide == 3) {
-          $("#next").hide()
-        } else {
-          $("#next").show()
+var buttonChange = () => {
+    if (currentSlide == 0) {
+      $("#previous").hide()
+    } else {
+      $("#previous").show()
+    };
+    if (currentSlide == 3) {
+      $("#next").hide()
+    } else {
+      $("#next").show()
         }
       }
 
-//
+//build the slides
+  var buildSlide = (slideObject) => {
+        addTitle(slideObject.title)
+        addText(slideObject.text)
+      };
+
+
+  //buildSlide(slides[currentSlide]);
+  buttonChange();
+      $("#next").click(() => {
+        currentSlide = currentSlide + 1;
+        buttonChange();
+        buildSlide(slides[currentSlide]);
+      })
+      $("#previous").click(() => {
+        currentSlide = currentSlide - 1;
+        buttonChange();
+        buildSlide(slides[currentSlide]);
+      })
+
       // 1. Function to map the array of restaurants
 
       var r
@@ -92,8 +114,7 @@ var slides = [
   pins: showMoreThanFifteenHundred()},
 ];
 
-// first create order for the slides
-var currentSlide = 0;
+
 
 // adding text to #main
 var addTitle = (title) => {
@@ -106,25 +127,7 @@ var addText = (text) => {
 
 
 
-//build the slides
-var buildSlide = (slideObject) => {
-  addTitle(slideObject.title)
-  addText(slideObject.text)
-};
 
-
-buildSlide(slides[currentSlide]);
-buttonChange();
-$("#next").click(() => {
-  currentSlide = currentSlide + 1;
-  buttonChange();
-  buildSlide(slides[currentSlide]);
-})
-$("#previous").click(() => {
-  currentSlide = currentSlide - 1;
-  buttonChange();
-  buildSlide(slides[currentSlide]);
-})
 
 //hide the previous button on slide [0]
 $("#previous").hide();
@@ -137,12 +140,12 @@ $("#next").click(() => {
   if(currentSlide ==3){
     $("#next").hide()
   };
-  if(slides[currentSlide].id == 0){
-  } else if(slides[currentSlide].id == 1){
+  if(currentSlide == 0){
+  } else if(currentSlide == 1){
     showFourStarsAbove();}
-    else if(slides[currentSlide].id == 2){
+    else if(currentSlide == 2){
       showTwoStarsBelow();}
-      else if(slides[currentSlide].id == 3){
+      else if(currentSlide == 3){
         showMoreThanFifteenHundred();}
 });
 
@@ -154,12 +157,12 @@ $("#previous").click(() => {
   if(currentSlide >0){
     currentSlide = currentSlide -1
   };
-  if(slides[currentSlide].id == 0){
-  } else if(slides[currentSlide].id == 1){
+  if(currentSlide == 0){
+  } else if(currentSlide == 1){
     showFourStarsAbove();}
-    else if(slides[currentSlide].id == 2){
+    else if(currentSlide == 2){
       showTwoStarsBelow();}
-      else if(slides[currentSlide].id == 3){
+      else if(currentSlide == 3){
         showMoreThanFifteenHundred();}
 });
 
