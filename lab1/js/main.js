@@ -12,16 +12,84 @@ var Stamen_TonerLite = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/ton
       	ext: 'png'
       }).addTo(map);
 
+// remove "previous" button on slide 0, remove "next" button on slide 4
+      var buttonChange = () => {
+        if (currentSlide == 0) {
+          $("#previous").hide()
+        } else {
+          $("#previous").show()
+        }
+        if (currentSlide == 3) {
+          $("#next").hide()
+        } else {
+          $("#next").show()
+        }
+      }
+
+
+      // 1. Function to map the array of restaurants
+
+      var r
+
+      var addMarker = (restaurant) => {
+        r = restaurant;
+        console.log(restaurant);
+        console.log([restaurant.longitude, restaurant.latitude]);
+        var marker = L.marker([restaurant.latitude, restaurant.longitude]);
+        marker.addTo(map);
+      };
+
+      // removing the layers
+      var remove = () => {
+        map.removeLayer(CLTrestos);
+      };
+
+      //CLTrestos.forEach(function(restaurant) {addMarker(restaurant)});
+
+      // 2. Function to filter by a certain array, and put these arrays on a map
+
+      // first filter: reviews 4 stars or above
+
+      var showFourStarsAbove = () => {
+        remove();
+        CLTrestos.filter(restaurant => restaurant.stars >= 4).forEach(function(restaurant) {addMarker(restaurant)});
+        console.log(showFourStarsAbove);
+        //console.log([restaurant.longitude, restaurant.latitude]);
+        //var marker = L.marker([restaurant.latitude, restaurant.longitude]);
+      };
+
+      // second filter: reviews 2 stars or below
+
+      var showTwoStarsBelow = () => {
+        map.removeLayer(restaurant);
+        CLTrestos.filter(restaurant => restaurant.stars <= 2).forEach(function(restaurant) {addMarker(restaurant)});
+        console.log(showTwoStarsBelow);
+        //console.log([restaurant.longitude, restaurant.latitude]);
+      };
+
+      // third filter: restaurant with most reviews in Charlotte
+
+      var showMoreThanFifteenHundred = () => {
+        map.removeLayer(restaurant);
+        CLTrestos.filter(restaurant => restaurant.review_count >= 1500).forEach(function(restaurant) {addMarker(restaurant)});
+        console.log(showMoreThanFifteenHundred);
+        console.log([restaurant.longitude, restaurant.latitude]);
+      };
+
+
 // create the slides
 var slides = [
   {title: "Welcome to Charlotte Restaurant Insider!",
   text: "CRI is here to give you recommendations on the best and worst restaurants in Charlotte, North Carolina, using Yelp's user-generated data. Click NEXT to continue."},
   {title: "Highest Reviewed Charlotte Restaurants",
-  text: "The restaurants appearing on the map are those which have received 4 stars or greater from Yelp users, so they are probably good. "},
+  text: "The restaurants appearing on the map are those which have received 4 stars or greater from Yelp users, so they are probably good. ",
+  pins: showFourStarsAbove()},
   {title: "Lowest Reviewed Charlotte Restaurants",
-  text: "The restaurants appearing on the map are those which have received 2 stars or below from Yelp users, so they are probably worth avoiding."},
+  text: "The restaurants appearing on the map are those which have received 2 stars or below from Yelp users, so they are probably worth avoiding.",
+  pins: showTwoStarsBelow()},
   {title: "Charlotte Restaurants Reviewed the Most Times",
-  text: "The restaurants appearing on the map are those which have been reviewed by Yelp users over 1000 times, so they are probably well-visited."},
+  text: "The restaurants appearing on the map are those which have been reviewed by Yelp users over 1000 times, so they are probably well-visited.",
+  pins: showMoreThanFifteenHundred()},
 ];
 
 // first create order for the slides
@@ -35,15 +103,7 @@ var addText = (text) => {
   $("#main").text(text)
 };
 
-// removing the layers
-var remove = () => {
-  map.removeLayer(featureGroup)
-};
 
-// adding the respective data (filtered) for each of the respective slides
-//var addData = () => {
-//  featureGroup = L.geoJson
-//}
 
 
 //build the slides
@@ -52,38 +112,24 @@ var buildSlide = (slideObject) => {
   addText(slideObject.text)
 };
 
-var buttonChange = () => {
-  if (currentSlide == 0) {
-    $("#previous").hide()
-  } else {
-    $("#previous").show()
-  }
-  if (currentSlide == 3) {
-    $("#next").hide()
-  } else {
-    $("#next").show()
-  }
-}
 
 buildSlide(slides[currentSlide]);
 buttonChange();
 $("#next").click(() => {
   currentSlide = currentSlide + 1;
   buttonChange();
-  legendChange();
   buildSlide(slides[currentSlide]);
 })
 $("#previous").click(() => {
   currentSlide = currentSlide - 1;
   buttonChange();
-  legendChange();
   buildSlide(slides[currentSlide]);
 })
 
 //hide the previous button on slide [0]
 $("#previous").hide();
 
-// define the next button
+// define the next button, and what to show on each of the next button pages
 $("#next").click(() => {
   if(currentSlide <3){
     currentSlide = currentSlide +1
@@ -91,70 +137,34 @@ $("#next").click(() => {
   if(currentSlide ==3){
     $("#next").hide()
   };
+  if(slides[currentSlide].id == 0){
+  } else if(slides[currentSlide].id == 1){
+    showFourStarsAbove();}
+    else if(slides[currentSlide].id == 2){
+      showTwoStarsBelow();}
+      else if(slides[currentSlide].id == 3){
+        showMoreThanFifteenHundred();}
 });
 
 // define the previous button
-//$("#previous").click(() => {
-//  if(currentSlide == 0) {
-//    $("#previous").hide()
-//  };
-//  if(current)
-// });
+$("#previous").click(() => {
+  if(currentSlide == 0) {
+    $("#previous").hide()
+  };
+  if(currentSlide >0){
+    currentSlide = currentSlide -1
+  };
+  if(slides[currentSlide].id == 0){
+  } else if(slides[currentSlide].id == 1){
+    showFourStarsAbove();}
+    else if(slides[currentSlide].id == 2){
+      showTwoStarsBelow();}
+      else if(slides[currentSlide].id == 3){
+        showMoreThanFifteenHundred();}
+});
 
 // remove title and text when updating slides
 var cleanup = () => {
   $('#title').remove()
   $('#text').remove()
 }
-
-
-
-
-// 1. Function to map the array of restaurants
-
-var r
-
-var addMarker = (restaurant) => {
-  r = restaurant;
-  console.log(restaurant);
-  console.log([restaurant.longitude, restaurant.latitude]);
-  var marker = L.marker([restaurant.latitude, restaurant.longitude]);
-  marker.addTo(map);
-};
-
-
-CLTrestos.forEach(function(restaurant) {addMarker(restaurant)});
-
-// 2. Function to filter by a certain array, and put these arrays on a map
-
-// first filter: reviews 4 stars or above
-
-var fourStarsAbove = (restaurant) => {
-  CLTrestos.filter(restaurant => restaurant.stars >= 4);
-  console.log(fourStarsAbove);
-  console.log([restaurant.longitude, restaurant.latitude]);
-  var marker = L.marker([restaurant.latitude, restaurant.longitude]);
-};
-
-// second filter: reviews 2 stars or below
-
-//var twoStarsBelow = (restaurant) => {
-//  CLTrestos.filter(restaurant => restaurant.stars <= 2);
-//  console.log(twoStarsBelow);
-//  console.log([restauran])
-
-// third filter: restaurant with most reviews in Charlotte
-
-var moreThanTwoThousand = CLTrestos.filter(restaurant => restaurant.review_count >= 1500);
-console.log(moreThanTwoThousand);
-
-// 3. Create arrays of the different map requests
-
-//var addData = () => {
-//  featureGroup = L.geoJson(CLTrestos, {
-//    filter: function()
-//  })
-//}
-
-
-// 4. Create a button to move from one array of map requests to the next
