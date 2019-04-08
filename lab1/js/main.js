@@ -26,7 +26,7 @@ var Stamen_TonerLite = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/ton
         }
       }
 
-
+//
       // 1. Function to map the array of restaurants
 
       var r
