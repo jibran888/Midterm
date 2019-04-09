@@ -72,9 +72,9 @@ var buttonChange = () => {
 
       // first filter: reviews 4 stars or above
 
-      var showFourStarsAbove = (restaurant) => {
-        remove();
-        CLTrestos.filter(restaurant => restaurant.stars >= 4).forEach(function(restaurant) {addMarker(restaurant)});
+      var showFourStarsAbove = () => {
+        //remove();
+        CLTrestos.forEach(function(restaurant) {addMarker(restaurant)});
         console.log(showFourStarsAbove);
         //console.log([restaurant.longitude, restaurant.latitude]);
         //var marker = L.marker([restaurant.latitude, restaurant.longitude]);
@@ -82,9 +82,9 @@ var buttonChange = () => {
 
       // second filter: reviews 2 stars or below
 
-      var showTwoStarsBelow = (restaurant) => {
-        map.removeLayer(restaurant);
-        CLTrestos.filter(restaurant => restaurant.stars <= 2).forEach(function(restaurant) {addMarker(restaurant)});
+      var showTwoStarsBelow = () => {
+      //  map.removeLayer(restaurant);
+        CLTrestos.forEach(function(restaurant) {addMarker(restaurant)});
         console.log(showTwoStarsBelow);
         //console.log([restaurant.longitude, restaurant.latitude]);
       };
@@ -92,10 +92,10 @@ var buttonChange = () => {
       // third filter: restaurant with most reviews in Charlotte
 
       var showMoreThanFifteenHundred = (restaurant) => {
-        map.removeLayer(restaurant);
+  //      map.removeLayer(restaurant);
         CLTrestos.filter(restaurant => restaurant.review_count >= 1500).forEach(function(restaurant) {addMarker(restaurant)});
         console.log(showMoreThanFifteenHundred);
-        console.log([restaurant.longitude, restaurant.latitude]);
+    //    console.log([restaurant.longitude, restaurant.latitude]);
       };
 
 
@@ -142,7 +142,7 @@ $("#next").click(() => {
   };
   if(currentSlide == 0){
   } else if(currentSlide == 1){
-    showFourStarsAbove();}
+    showFourStarsAbove.filter(restaurant => restaurant.stars >= 4);}
     else if(currentSlide == 2){
       showTwoStarsBelow();}
       else if(currentSlide == 3){
@@ -159,9 +159,9 @@ $("#previous").click(() => {
   };
   if(currentSlide == 0){
   } else if(currentSlide == 1){
-    showFourStarsAbove();}
+    showFourStarsAbove.filter(restaurant => restaurant.stars >= 4);}
     else if(currentSlide == 2){
-      showTwoStarsBelow();}
+      showTwoStarsBelow.filter(restaurant => restaurant.stars <= 2);}
       else if(currentSlide == 3){
         showMoreThanFifteenHundred();}
 });
