@@ -15,7 +15,7 @@ var Stamen_TonerLite = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/ton
 // first create order for the slides
 var currentSlide = 0;
 
-// remove "previous" button on slide 0, remove "next" button on slide 4
+// remove "previous" button on slide 0, remove "next" button on slide 3
 var buttonChange = () => {
     if (currentSlide == 0) {
       $("#previous").hide()
@@ -30,10 +30,10 @@ var buttonChange = () => {
       }
 
 //build the slides
-  var buildSlide = (slideObject) => {
-        addTitle(slideObject.title)
-        addText(slideObject.text)
-      };
+  //var buildSlide = (slideObject) => {
+//        addTitle(slideObject.title)
+//        addText(slideObject.text)
+//      };
 
 
   //buildSlide(slides[currentSlide]);
@@ -41,12 +41,12 @@ var buttonChange = () => {
       $("#next").click(() => {
         currentSlide = currentSlide + 1;
         buttonChange();
-        buildSlide(slides[currentSlide]);
+//        buildSlide(currentSlide);
       })
       $("#previous").click(() => {
         currentSlide = currentSlide - 1;
         buttonChange();
-        buildSlide(slides[currentSlide]);
+//        buildSlide(currentSlide);
       })
 
       // 1. Function to map the array of restaurants
@@ -62,9 +62,9 @@ var buttonChange = () => {
       };
 
       // removing the layers
-      var remove = () => {
-        map.removeLayer(CLTrestos);
-      };
+      //var remove = (marker) => {
+      //  map.removeLayer(marker);
+      //};
 
       //CLTrestos.forEach(function(restaurant) {addMarker(restaurant)});
 
@@ -72,7 +72,7 @@ var buttonChange = () => {
 
       // first filter: reviews 4 stars or above
 
-      var showFourStarsAbove = () => {
+      var showFourStarsAbove = (restaurant) => {
         remove();
         CLTrestos.filter(restaurant => restaurant.stars >= 4).forEach(function(restaurant) {addMarker(restaurant)});
         console.log(showFourStarsAbove);
@@ -82,7 +82,7 @@ var buttonChange = () => {
 
       // second filter: reviews 2 stars or below
 
-      var showTwoStarsBelow = () => {
+      var showTwoStarsBelow = (restaurant) => {
         map.removeLayer(restaurant);
         CLTrestos.filter(restaurant => restaurant.stars <= 2).forEach(function(restaurant) {addMarker(restaurant)});
         console.log(showTwoStarsBelow);
@@ -91,7 +91,7 @@ var buttonChange = () => {
 
       // third filter: restaurant with most reviews in Charlotte
 
-      var showMoreThanFifteenHundred = () => {
+      var showMoreThanFifteenHundred = (restaurant) => {
         map.removeLayer(restaurant);
         CLTrestos.filter(restaurant => restaurant.review_count >= 1500).forEach(function(restaurant) {addMarker(restaurant)});
         console.log(showMoreThanFifteenHundred);
